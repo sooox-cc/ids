@@ -1,0 +1,26 @@
+services:
+  jupyter:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/workspace
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    container_name: jupyter-ids
+    # Allocate sufficient resources for heavy ML training
+    deploy:
+      resources:
+        limits:
+          cpus: '6'
+          memory: 16G
+        reservations:
+          cpus: '4'
+          memory: 12G
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    init: true
